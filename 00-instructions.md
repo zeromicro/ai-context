@@ -47,10 +47,10 @@ User Request →
 
 For complete implementation patterns, refer to [zero-skills](https://github.com/zeromicro/zero-skills):
 
-- REST API → [rest-api-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/patterns/rest-api-patterns.md)
-- RPC Services → [rpc-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/patterns/rpc-patterns.md)
-- Database → [database-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/patterns/database-patterns.md)
-- Resilience → [resilience-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/patterns/resilience-patterns.md)
+- REST API → [rest-api-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/references/rest-api-patterns.md)
+- RPC Services → [rpc-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/references/rpc-patterns.md)
+- Database → [database-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/references/database-patterns.md)
+- Resilience → [resilience-patterns.md](https://github.com/zeromicro/zero-skills/blob/main/references/resilience-patterns.md)
 - Troubleshooting → [common-issues.md](https://github.com/zeromicro/zero-skills/blob/main/troubleshooting/common-issues.md)
 
 ## Avoid
