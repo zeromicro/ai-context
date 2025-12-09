@@ -166,6 +166,74 @@ token, err := l.getJwtToken(
 userId := l.ctx.Value("userId").(json.Number).Int64()
 ```
 
+## Documentation
+
+### README.md
+```markdown
+# Service Name API
+
+## Overview
+Brief service description and purpose.
+
+## Features
+- Feature 1
+- Feature 2
+
+## API Endpoints
+
+### POST /api/users
+Create a new user.
+
+**Request:**
+\`\`\`json
+{
+  "email": "user@example.com",
+  "name": "John Doe"
+}
+\`\`\`
+
+**Response:**
+\`\`\`json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "name": "John Doe"
+}
+\`\`\`
+
+**Error Codes:**
+- 400: Invalid input
+- 409: User already exists
+- 500: Internal server error
+
+## Configuration
+
+\`\`\`yaml
+Name: user-api
+Port: 8888
+MySQL:
+  DataSource: root:pass@tcp(localhost:3306)/db
+\`\`\`
+
+## Running
+
+\`\`\`bash
+go run user.go -f etc/user.yaml
+\`\`\`
+
+## Testing
+
+\`\`\`bash
+# Create user
+curl -X POST http://localhost:8888/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","name":"Test"}'
+
+# Run tests
+go test ./...
+\`\`\`
+```
+
 ## Generation Rules
 
 - Always validate input
@@ -173,3 +241,5 @@ userId := l.ctx.Value("userId").(json.Number).Int64()
 - Use errorx.NewCodeError for errors
 - Add validation tags
 - Generate complete logic, not stubs
+- Generate README.md with API docs and examples
+- Include error codes and testing instructions

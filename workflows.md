@@ -10,6 +10,8 @@
 5. generate_api_from_spec
 6. Implement logic
 7. Generate tests
+8. Generate README.md (service overview, API docs, usage examples)
+9. Generate API.md (detailed endpoint documentation)
 ```
 
 ## 2. New RPC Service
@@ -20,6 +22,8 @@
 3. Show proto
 4. Implement methods
 5. Generate tests
+6. Generate README.md (service overview, proto docs, usage examples)
+7. Generate RPC.md (detailed method documentation)
 ```
 
 ## 3. Database Model

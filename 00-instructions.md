@@ -27,6 +27,17 @@
 - Add validation tags: `validate:"required,email"`
 - Generate tests automatically
 
+### Documentation
+- ALWAYS generate README.md for new services
+  - Service overview and purpose
+  - API/RPC endpoint documentation
+  - Configuration guide
+  - Usage examples with curl/grpcurl
+  - Testing instructions
+- Generate API.md/RPC.md for detailed endpoint docs
+- Include request/response examples
+- Document error codes and handling
+
 ### Go-Zero Conventions
 - Context first: `func(ctx context.Context, req *types.Request)`
 - Errors: `errorx.NewCodeError(code, msg)`
@@ -37,10 +48,10 @@
 
 ```
 User Request →
-├─ New API? → create_api_service → generate_api_from_spec
-├─ New RPC? → create_rpc_service
+├─ New API? → create_api_service → generate_api_from_spec → Generate docs
+├─ New RPC? → create_rpc_service → Generate docs
 ├─ Database? → generate_model
-└─ Modify? → Edit .api → generate_api_from_spec
+└─ Modify? → Edit .api → generate_api_from_spec → Update docs
 ```
 
 ## Detailed Patterns
