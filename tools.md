@@ -6,7 +6,7 @@ Create REST API service structure
 {
   "service_name": "user-api",
   "output_dir": "./services/user",
-  "style": "goZero"
+  "style": "go_zero"
 }
 ```
 
@@ -16,7 +16,7 @@ Create gRPC service structure
 {
   "service_name": "order-rpc",
   "output_dir": "./services/order",
-  "style": "goZero"
+  "style": "go_zero"
 }
 ```
 
@@ -26,7 +26,7 @@ Generate code from .api file
 {
   "api_file": "user.api",
   "output_dir": "./",
-  "style": "goZero"
+  "style": "go_zero"
 }
 ```
 Safe to re-run, won't overwrite custom logic.
@@ -39,7 +39,7 @@ Generate database model
   "source": "user:pass@tcp(host:3306)/db",
   "table": "users",
   "output_dir": "./model",
-  "style": "goZero"
+  "style": "go_zero"
 }
 ```
 Types: `mysql`, `postgres`, `mongo`
@@ -51,7 +51,7 @@ Generate .api from description
 {
   "description": "User CRUD with auth",
   "service_name": "user-api",
-  "style": "goZero"
+  "style": "go_zero"
 }
 ```
 
