@@ -2,382 +2,214 @@
 
 English | [简体中文](#简体中文)
 
-Transform any AI coding assistant into a go-zero expert with one prompt.
+Project instructions and verified examples for building services with go-zero.
+The workflow layer lives here; [zero-skills](https://github.com/zeromicro/zero-skills)
+provides detailed reference material. Code generation uses goctl in the terminal.
 
 ## One-Prompt Setup
 
-Just tell your AI assistant:
+Tell your assistant:
 
-```
-Set up go-zero AI tools for this project from https://github.com/zeromicro/ai-context
-```
-
-Your AI will automatically:
-1. Detect which AI tool you're using (Claude Code, Cursor, Copilot, Windsurf)
-2. Install the appropriate configuration
-3. Set up zero-skills knowledge base
-
-## What Gets Installed
-
-This prompt sets up a two-layer AI assistance system:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     AI Assistant                            │
-│  (Claude Code, GitHub Copilot, Cursor, Windsurf)           │
-└────────────┬─────────────────────┬──────────────────────────┘
-             │                     │
-             ├─ Workflow Layer ────┤
-             │  ai-context         │  "What to do" - Quick decisions
-             │  (~5KB)             │  Loaded for every interaction
-             │                     │
-             └─ Knowledge Layer ───┘
-                zero-skills          "How & Why" - Detailed patterns
-                (~40KB)              + goctl command reference
-                                     Loaded when needed
+```text
+Set up go-zero AI context from https://github.com/zeromicro/ai-context.
+Follow its README for my editor, preserve existing instructions, and verify
+that the editor loads the installed rule and can read the referenced files.
 ```
 
-The AI runs `goctl` directly in the terminal for code generation — no separate tools or servers needed.
-
-| Component | Purpose | Size | Repository |
-|-----------|---------|------|------------|
-| **ai-context** | Workflow instructions, decision trees | ~5KB | [zeromicro/ai-context](https://github.com/zeromicro/ai-context) |
-| **zero-skills** | Comprehensive patterns, best practices, goctl reference | ~45KB | [zeromicro/zero-skills](https://github.com/zeromicro/zero-skills) |
+Setup requires an editor-specific entrypoint. Cloning this repository alone does
+not activate its instructions. If the assistant cannot identify your editor, tell
+it which one you use.
 
 ## Manual Setup
 
-If you prefer manual installation, choose your AI tool:
+Run from the consuming project's Git root. Add each submodule only once:
+
+```bash
+git submodule add https://github.com/zeromicro/ai-context.git .ai-context/go-zero
+git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
+```
+
+Then install the adapter for your editor below. Commands use `cp -n` to preserve
+existing files. If the destination exists, merge the template into it manually;
+a skipped copy does not install the adapter. Keep existing frontmatter valid.
 
 ### Claude Code
 
 ```bash
-# Install ai-context (workflow instructions)
-git submodule add https://github.com/zeromicro/ai-context.git .claude/ai-context
-
-# Install zero-skills (knowledge base + goctl reference)
-git submodule add https://github.com/zeromicro/zero-skills.git .claude/skills/zero-skills
+cp -n .ai-context/go-zero/adapters/CLAUDE.md CLAUDE.md
 ```
+
+This imports the core instructions through `@.ai-context/go-zero/00-instructions.md`.
+The referenced workflow and patterns are read when needed. For native zero-skills
+discovery, optionally install it at `.claude/skills/zero-skills` instead of
+`.ai-context/zero-skills` and adjust its reference in the adapter.
+See [Claude memory and imports](https://code.claude.com/docs/en/memory).
 
 ### GitHub Copilot
 
 ```bash
-# Add ai-context as submodule
-git submodule add https://github.com/zeromicro/ai-context.git .github/ai-context
-
-# Create symlink for Copilot
-ln -s ai-context/00-instructions.md .github/copilot-instructions.md
-
-# Add zero-skills for reference
-git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
+mkdir -p .github
+cp -n .ai-context/go-zero/adapters/copilot-instructions.md .github/copilot-instructions.md
 ```
+
+See [Copilot repository instructions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions).
 
 ### Cursor
 
 ```bash
-# Add ai-context as rules directory
-git submodule add https://github.com/zeromicro/ai-context.git .cursorrules
-
-# Add zero-skills for reference
-git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
+mkdir -p .cursor/rules
+cp -n .ai-context/go-zero/adapters/go-zero.mdc .cursor/rules/go-zero.mdc
 ```
 
-Cursor automatically reads all `.md` files in `.cursorrules` directory.
+The adapter has `alwaysApply: true`. A directory named `.cursorrules` is not a
+replacement for a rule file. See [Cursor rules](https://prod.cursor.com/docs/rules).
 
 ### Windsurf
 
 ```bash
-# Add ai-context as rules directory
-git submodule add https://github.com/zeromicro/ai-context.git .windsurfrules
-
-# Add zero-skills for reference
-git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
+mkdir -p .windsurf/rules
+cp -n .ai-context/go-zero/adapters/go-zero.md .windsurf/rules/go-zero.md
 ```
 
-## After Setup
+The adapter has `trigger: always_on`. A directory named `.windsurfrules` is not
+a rule file. See [Cascade rules](https://docs.windsurf.com/windsurf/cascade/memories).
 
-Once installed, your AI assistant can:
+### Verify Installation
 
-**Generate Services:**
-```
-Create a user management API with CRUD operations
+1. Confirm the editor recognizes the installed entrypoint in its rules/instructions UI.
+2. Start a new conversation and ask the assistant to read
+   `.ai-context/go-zero/00-instructions.md` and name the verification steps in
+   `.ai-context/go-zero/workflows.md`.
+3. Confirm that `.ai-context/zero-skills/SKILL.md` is accessible when detailed
+   references are needed. An explicit read checks accessibility; the editor UI
+   check is still needed to confirm automatic loading.
+4. Commit the adapters, `.gitmodules`, and submodule pointers together.
+
+After cloning a consuming project, restore its pinned submodules:
+
+```bash
+git submodule update --init --recursive
 ```
 
-**Apply Patterns:**
-```
-Add rate limiting and circuit breaker to my API
-```
+## Usage
 
-**Troubleshoot Issues:**
-```
-Why am I getting "http: named cookie not present" error?
-```
+Examples of requests:
 
-**Follow Best Practices:**
-```
-Review my handler code for go-zero anti-patterns
-```
+- Create a user management API with CRUD operations.
+- Add JWT authentication and ownership checks.
+- Add rate limiting and circuit breakers.
+- Review handler code for go-zero anti-patterns.
+
+The entrypoint directs the assistant to [workflows.md](workflows.md),
+[tools.md](tools.md), and [patterns.md](patterns.md). Use existing project
+conventions; contract changes start with `.api` or `.proto`, while implementation
+changes need no regeneration.
 
 ## Updating
 
-Keep your AI context up to date:
+Update only the context submodules, then review and commit their new pointers:
 
 ```bash
-# Update all submodules at once
-git submodule update --remote --recursive
-
-# Or update individually
-git submodule update --remote .github/ai-context  # Copilot
-git submodule update --remote .cursorrules        # Cursor
-git submodule update --remote .windsurfrules      # Windsurf
-git submodule update --remote .ai-context/zero-skills
-git submodule update --remote .claude/skills/zero-skills
+git submodule update --init .ai-context/go-zero .ai-context/zero-skills
+git submodule update --remote .ai-context/go-zero .ai-context/zero-skills
+git diff --submodule
 ```
 
-## How It Works
-
-### ai-context (This Repo)
-
-Provides lightweight workflow instructions:
-- **Decision trees**: When to use API vs RPC
-- **File priority**: Which files to read first
-- **Tool usage**: How to use goctl commands
-- **Quick patterns**: Common code snippets
-
-### zero-skills
-
-Provides comprehensive knowledge:
-- **REST API patterns**: Handler → Logic → Model architecture
-- **RPC patterns**: Service discovery, load balancing
-- **Database patterns**: SQL, MongoDB, Redis, caching
-- **Resilience patterns**: Circuit breaker, rate limiting
-- **goctl commands**: Complete reference for all goctl operations, post-generation steps, templates
-- **Troubleshooting**: Common errors and solutions
-
-### How Code Generation Works
-
-The AI runs `goctl` directly in the terminal — the same tool go-zero developers use manually:
-
-```bash
-# AI writes .api spec → runs goctl → fixes imports → builds
-goctl api go -api user.api -dir . --style go_zero
-go mod tidy
-go build ./...
-```
-
-No separate MCP server or binary needed. Just `goctl` and Go.
-
-## Feature Comparison
-
-| Feature | Claude Code | Cursor | Copilot | Windsurf |
-|---------|-------------|--------|---------|----------|
-| ai-context | ✅ Auto-load | ✅ Via rules | ✅ Via instructions | ✅ Via rules |
-| zero-skills | ✅ Native skills | ✅ Reference | ✅ Reference | ✅ Reference |
-| goctl code gen | ✅ Terminal | ✅ Terminal | ✅ Terminal | ✅ Terminal |
-| Subagent workflows | ✅ | ❌ | ❌ | ❌ |
+Adapters are copied files. Compare updated templates with your installed adapters
+and merge changes while preserving project-specific instructions. Existing
+installations under older paths can remain there if adapter references are adjusted.
 
 ## Requirements
 
-- Go 1.19+
-- goctl (install: `go install github.com/zeromicro/go-zero/tools/goctl@latest`)
-- Git
+The verification baseline is Go 1.26.3, goctl 1.9.2, and go-zero 1.9.2.
+This is a reproducible baseline, not a claim that these are the latest versions.
+Existing projects should retain their selected versions unless intentionally upgraded.
+
+```bash
+go install github.com/zeromicro/go-zero/tools/goctl@v1.9.2
+```
+
+Git is required for submodules. RPC generation additionally requires protoc and
+the Go protobuf/gRPC plugins; see [tools.md](tools.md).
+
+## Verification
+
+Maintainers can run the same checks as CI:
+
+```bash
+python3 scripts/check_docs.py
+python3 -B -m unittest discover -s tests -p 'test_*.py'
+python3 scripts/check_docs.py --online
+python3 scripts/verify_patterns.py
+```
+
+The offline documentation check validates local links, fences, whitespace, and
+adapter paths/frontmatter. Regression tests ensure disabled adapter settings,
+broken links, and malformed fences fail the check. The optional online check checks external link
+availability (not remote anchors). Pattern verification uses temporary directories,
+extracts the marked examples from Markdown, generates API code and a MySQL model,
+then builds and tests the completed service. It also checks API scaffold creation
+and preservation of custom handlers/logic during regeneration. Configuration tests
+load the documented YAML and verify environment-variable expansion.
+
+Python 3.10+, Go, and goctl are required. Go dependency downloads and online link
+checks need network access. Tests use a fake model and an HTTP test server, so
+MySQL and Redis are not required. RPC generation is documented but is not covered
+by this API fixture.
 
 ## Related Projects
 
-- [go-zero](https://github.com/zeromicro/go-zero) - The framework
-- [zero-skills](https://github.com/zeromicro/zero-skills) - Knowledge base
+- [go-zero](https://github.com/zeromicro/go-zero)
+- [zero-skills](https://github.com/zeromicro/zero-skills)
 
 ## License
 
-MIT License - Same as go-zero framework
+MIT License — same as the go-zero framework.
 
----
+## 简体中文
 
-# 简体中文
+本仓库提供 go-zero 工作流、工具说明和可验证的代码示例。
+[zero-skills](https://github.com/zeromicro/zero-skills) 提供详细参考资料。
+仅克隆仓库不会自动启用指令，还需要安装编辑器对应的入口文件。
 
-将任何 AI 编程助手变成 go-zero 专家，只需一个提示。
+### 安装
 
-## 一键安装
-
-只需告诉你的 AI 助手：
-
-```
-Set up go-zero AI tools for this project from https://github.com/zeromicro/ai-context
-```
-
-AI 会自动：
-1. 检测你使用的 AI 工具（Claude Code、Cursor、Copilot、Windsurf）
-2. 安装相应的配置
-3. 设置 zero-skills 知识库
-
-## 安装内容
-
-这个提示会设置一个两层 AI 辅助系统：
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     AI 助手                                  │
-│  (Claude Code, GitHub Copilot, Cursor, Windsurf)           │
-└────────────┬─────────────────────┬──────────────────────────┘
-             │                     │
-             ├─ 工作流层 ──────────┤
-             │  ai-context         │  "做什么" - 快速决策
-             │  (~5KB)             │  每次交互都加载
-             │                     │
-             └─ 知识层 ────────────┘
-                zero-skills          "如何和为什么" - 详细模式
-                (~45KB)              + goctl 命令参考
-                                     需要时加载
-```
-
-AI 在终端中直接运行 `goctl` 生成代码——无需额外工具或服务器。
-
-| 组件 | 用途 | 大小 | 仓库 |
-|------|------|------|------|
-| **ai-context** | 工作流指令、决策树 | ~5KB | [zeromicro/ai-context](https://github.com/zeromicro/ai-context) |
-| **zero-skills** | 完整模式、最佳实践、goctl 参考 | ~45KB | [zeromicro/zero-skills](https://github.com/zeromicro/zero-skills) |
-
-## 手动安装
-
-如果你喜欢手动安装，选择你的 AI 工具：
-
-### Claude Code
+在项目的 Git 根目录添加两个子模块（已有则跳过）：
 
 ```bash
-# 安装 ai-context（工作流指令）
-git submodule add https://github.com/zeromicro/ai-context.git .claude/ai-context
-
-# 安装 zero-skills（知识库 + goctl 参考）
-git submodule add https://github.com/zeromicro/zero-skills.git .claude/skills/zero-skills
-```
-
-### GitHub Copilot
-
-```bash
-# 添加 ai-context 作为子模块
-git submodule add https://github.com/zeromicro/ai-context.git .github/ai-context
-
-# 创建 Copilot 符号链接
-ln -s ai-context/00-instructions.md .github/copilot-instructions.md
-
-# 添加 zero-skills 作为参考
+git submodule add https://github.com/zeromicro/ai-context.git .ai-context/go-zero
 git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
 ```
 
-### Cursor
+按上方对应编辑器章节复制适配文件：
 
-```bash
-# 添加 ai-context 作为规则目录
-git submodule add https://github.com/zeromicro/ai-context.git .cursorrules
+| 编辑器 | 模板（位于 adapters/） | 项目内目标路径 |
+|--------|-----------------------|----------------|
+| Claude Code | CLAUDE.md | CLAUDE.md |
+| GitHub Copilot | copilot-instructions.md | .github/copilot-instructions.md |
+| Cursor | go-zero.mdc | .cursor/rules/go-zero.mdc |
+| Windsurf | go-zero.md | .windsurf/rules/go-zero.md |
 
-# 添加 zero-skills 作为参考
-git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
-```
+复制命令使用 `cp -n` 保留已有文件。如果目标已存在，请手动合并模板并保留原有配置；
+跳过复制不代表安装成功。Claude 模板使用导入语法，Cursor/Windsurf 模板包含自动加载配置。
+不要把仓库作为目录安装到 `.cursorrules` 或 `.windsurfrules`。
 
-Cursor 自动读取 `.cursorrules` 目录中的所有 `.md` 文件。
+在编辑器界面确认规则已加载，再开启新对话，要求助手读取
+`.ai-context/go-zero/00-instructions.md` 并列出工作流中的验证步骤。
+显式读取只能确认文件可访问，自动加载仍需通过编辑器确认。
+提交适配文件、`.gitmodules` 和子模块指针。克隆项目后运行
+`git submodule update --init --recursive` 恢复固定版本。
 
-### Windsurf
+### 更新与验证
 
-```bash
-# 添加 ai-context 作为规则目录
-git submodule add https://github.com/zeromicro/ai-context.git .windsurfrules
+按上方 Updating 章节仅更新这两个子模块，并检查差异。
+适配文件为复制件，更新后需比较模板并合并变化，保留项目已有指令。
 
-# 添加 zero-skills 作为参考
-git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-skills
-```
+验证基线为 Go 1.26.3、goctl 1.9.2 和 go-zero 1.9.2，并非声明它们是最新版本。
+已有项目保留原有版本。RPC 还需要 protoc 及 Go 插件，详见 [tools.md](tools.md)。
 
-## 安装后
-
-安装完成后，你的 AI 助手可以：
-
-**生成服务：**
-```
-创建一个包含 CRUD 操作的用户管理 API
-```
-
-**应用模式：**
-```
-给我的 API 添加限流和熔断
-```
-
-**排查问题：**
-```
-为什么我会收到 "http: named cookie not present" 错误？
-```
-
-**遵循最佳实践：**
-```
-检查我的 handler 代码是否存在 go-zero 反模式
-```
-
-## 更新
-
-保持 AI 上下文最新：
-
-```bash
-# 一次更新所有子模块
-git submodule update --remote --recursive
-
-# 或单独更新
-git submodule update --remote .github/ai-context  # Copilot
-git submodule update --remote .cursorrules        # Cursor
-git submodule update --remote .windsurfrules      # Windsurf
-git submodule update --remote .ai-context/zero-skills
-git submodule update --remote .claude/skills/zero-skills
-```
-
-## 工作原理
-
-### ai-context（本仓库）
-
-提供轻量级工作流指令：
-- **决策树**：何时使用 API vs RPC
-- **文件优先级**：优先读取哪些文件
-- **工具使用**：如何使用 goctl 命令
-- **快速模式**：常用代码片段
-
-### zero-skills
-
-提供完整知识：
-- **REST API 模式**：Handler → Logic → Model 架构
-- **RPC 模式**：服务发现、负载均衡
-- **数据库模式**：SQL、MongoDB、Redis、缓存
-- **弹性模式**：熔断器、限流
-- **goctl 命令**：所有 goctl 操作的完整参考、生成后步骤、模板
-- **故障排查**：常见错误和解决方案
-
-### 代码生成方式
-
-AI 在终端中直接运行 `goctl`——与 go-zero 开发者手动使用的工具相同：
-
-```bash
-# AI 编写 .api 规范 → 运行 goctl → 修复导入 → 构建
-goctl api go -api user.api -dir . --style go_zero
-go mod tidy
-go build ./...
-```
-
-无需额外的 MCP 服务器或二进制文件。只需 `goctl` 和 Go。
-
-## 功能对比
-
-| 功能 | Claude Code | Cursor | Copilot | Windsurf |
-|------|-------------|--------|---------|----------|
-| ai-context | ✅ 自动加载 | ✅ 通过规则 | ✅ 通过指令 | ✅ 通过规则 |
-| zero-skills | ✅ 原生技能 | ✅ 引用 | ✅ 引用 | ✅ 引用 |
-| goctl 代码生成 | ✅ 终端 | ✅ 终端 | ✅ 终端 | ✅ 终端 |
-| 子代理工作流 | ✅ | ❌ | ❌ | ❌ |
-
-## 环境要求
-
-- Go 1.19+
-- goctl（安装：`go install github.com/zeromicro/go-zero/tools/goctl@latest`）
-- Git
-
-## 相关项目
-
-- [go-zero](https://github.com/zeromicro/go-zero) - 框架本身
-- [zero-skills](https://github.com/zeromicro/zero-skills) - 知识库
-
-## 许可证
-
-MIT License - 与 go-zero 框架相同
+维护者运行 Verification 章节的命令，检查文档链接、适配文件以及
+Markdown 中的实际代码。验证会生成 API 和 MySQL 模型，构建服务并执行测试；
+回归测试确认错误的适配配置、链接和代码围栏会被拒绝，并验证 YAML 环境变量展开。
+测试使用假模型，无需启动 MySQL 或 Redis。在线链接检查和依赖下载需要网络。
+当前示例验证不覆盖 RPC 生成。
