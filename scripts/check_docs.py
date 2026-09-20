@@ -136,7 +136,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         raise SystemExit(1)
-    print(f"Checked {len(files)} documents and 4 adapters; local links and Markdown passed.")
+    print(f"Checked {len(files)} documents, including {len(adapters)} adapters; local links and Markdown passed.")
     if args.online:
         print(f"Checked {len(urls)} external URLs (remote anchors are not checked).")
 

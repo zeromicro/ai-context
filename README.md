@@ -145,7 +145,7 @@ python3 scripts/verify_patterns.py
 
 The offline documentation check validates local links, fences, whitespace, and
 adapter paths/frontmatter. Regression tests ensure disabled adapter settings,
-broken links, and malformed fences fail the check. The optional online check checks external link
+broken links, and malformed fences fail the check. The optional online check verifies external link
 availability (not remote anchors). Pattern verification uses temporary directories,
 extracts the marked examples from Markdown, generates API code and a MySQL model,
 then builds and tests the completed service. It also checks API scaffold creation
