@@ -107,6 +107,7 @@ def main():
                     errors.append(f"{path.name}: missing anchor: {link}")
 
     adapters = {
+        "AGENTS.md": ("AGENTS.md", "# go-zero"),
         "CLAUDE.md": ("CLAUDE.md", "@.ai-context/go-zero/00-instructions.md"),
         "copilot-instructions.md": (".github/copilot-instructions.md", "# go-zero"),
         "go-zero.mdc": (".cursor/rules/go-zero.mdc", "alwaysApply: true"),

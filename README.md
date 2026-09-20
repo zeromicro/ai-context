@@ -45,6 +45,16 @@ discovery, optionally install it at `.claude/skills/zero-skills` instead of
 `.ai-context/zero-skills` and adjust its reference in the adapter.
 See [Claude memory and imports](https://code.claude.com/docs/en/memory).
 
+### Codex
+
+```bash
+cp -n .ai-context/go-zero/adapters/AGENTS.md AGENTS.md
+```
+
+Codex discovers `AGENTS.md` from the project root toward the current working
+directory. Start a new Codex session after installing or changing the file.
+See [Codex custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md/).
+
 ### GitHub Copilot
 
 ```bash
@@ -186,6 +196,7 @@ git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-
 | 编辑器 | 模板（位于 adapters/） | 项目内目标路径 |
 |--------|-----------------------|----------------|
 | Claude Code | CLAUDE.md | CLAUDE.md |
+| Codex | AGENTS.md | AGENTS.md |
 | GitHub Copilot | copilot-instructions.md | .github/copilot-instructions.md |
 | Cursor | go-zero.mdc | .cursor/rules/go-zero.mdc |
 | Windsurf | go-zero.md | .windsurf/rules/go-zero.md |
