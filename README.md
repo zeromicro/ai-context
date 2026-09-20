@@ -45,15 +45,17 @@ discovery, optionally install it at `.claude/skills/zero-skills` instead of
 `.ai-context/zero-skills` and adjust its reference in the adapter.
 See [Claude memory and imports](https://code.claude.com/docs/en/memory).
 
-### Codex
+### Codex and OpenCode
 
 ```bash
 cp -n .ai-context/go-zero/adapters/AGENTS.md AGENTS.md
 ```
 
 Codex discovers `AGENTS.md` from the project root toward the current working
-directory. Start a new Codex session after installing or changing the file.
-See [Codex custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md/).
+directory, while OpenCode loads it as persistent project instructions. Start a
+new session after installing or changing the file. See the documentation for
+[Codex](https://developers.openai.com/codex/guides/agents-md/) and
+[OpenCode](https://opencode.ai/docs/rules/).
 
 ### GitHub Copilot
 
@@ -197,12 +199,14 @@ git submodule add https://github.com/zeromicro/zero-skills.git .ai-context/zero-
 |--------|-----------------------|----------------|
 | Claude Code | CLAUDE.md | CLAUDE.md |
 | Codex | AGENTS.md | AGENTS.md |
+| OpenCode | AGENTS.md | AGENTS.md |
 | GitHub Copilot | copilot-instructions.md | .github/copilot-instructions.md |
 | Cursor | go-zero.mdc | .cursor/rules/go-zero.mdc |
 | Windsurf | go-zero.md | .windsurf/rules/go-zero.md |
 
 复制命令使用 `cp -n` 保留已有文件。如果目标已存在，请手动合并模板并保留原有配置；
-跳过复制不代表安装成功。Claude 模板使用导入语法，Cursor/Windsurf 模板包含自动加载配置。
+跳过复制不代表安装成功。Claude 模板使用导入语法，OpenCode 使用项目根目录的
+`AGENTS.md`，Cursor/Windsurf 模板包含自动加载配置。
 不要把仓库作为目录安装到 `.cursorrules` 或 `.windsurfrules`。
 
 在编辑器界面确认规则已加载，再开启新对话，要求助手读取
